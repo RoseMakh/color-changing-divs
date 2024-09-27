@@ -1,5 +1,6 @@
 const cc = console.log;
 const container = document.getElementById("container");
+const resetBtn = document.getElementById("reset");
 
 let speed = 0;
 let divsNum = 40;
@@ -7,6 +8,8 @@ let divVars = {};
 
 let changeMode = "Hue";
 //Hue , Saturation , Lightness
+
+resetBtn.addEventListener("click", resetGrid);
 
 //ADDING DIVS INTO DIVVARS DYNAMICALLY
 for (let i = 1; i <= divsNum; i++) {
@@ -18,6 +21,7 @@ for (let i = 1; i <= divsNum; i++) {
   let getNewDiv = document.getElementById(divName);
 
   getNewDiv.addEventListener("mousemove", colorChange);
+
   divVars[divName] = {
     divHue: 340,
     directionHue: 1,
@@ -28,8 +32,14 @@ for (let i = 1; i <= divsNum; i++) {
   };
 }
 
-//cc(divVars.div3.name);
-cc(divVars);
+function selectMode() {
+  changeMode = this.value;
+}
+
+let modeOptions = document.querySelectorAll("input[name = mode]");
+modeOptions.forEach((e) => {
+  e.addEventListener("click", selectMode);
+});
 
 function colorChange() {
   let d = divVars[this.id];
@@ -53,4 +63,21 @@ function colorChange() {
   }
   d["div" + changeMode] += speed * d["direction" + changeMode];
   id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
+}
+
+function resetGrid() {
+  let x = divVars;
+  for (const e in x) {
+    x[e] = {
+      divHue: 340,
+      directionHue: 1,
+      divSaturation: 100,
+      directionSaturation: 1,
+      divLightness: 50,
+      directionLightness: 1,
+    };
+  }
+  for (const child of container.children) {
+    document.getElementById(child.id).style.backgroundColor = "white";
+  }
 }

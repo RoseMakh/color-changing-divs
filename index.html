@@ -13,9 +13,40 @@
   <body>
     <main>
       <h1>Color Changing Divs</h1>
-      (development in progress)
-
+      <p>Mouse over the squares to change their colors.</p>
       <div id="container"></div>
+      <fieldset>
+        <legend>Select an HSL parameter to change:</legend>
+        <div>
+          <ul>
+            <li>
+              <input
+                type="radio"
+                id="modeHue"
+                name="mode"
+                value="Hue"
+                checked
+              />
+              <label for="modeHue">Hue</label>
+            </li>
+          </ul>
+          <input
+            type="radio"
+            id="modeSaturation"
+            name="mode"
+            value="Saturation"
+          />
+          <label for="modeSaturation">Saturation</label><br />
+          <input
+            type="radio"
+            id="modeLightness"
+            name="mode"
+            value="Lightness"
+          />
+          <label for="modeLightness">Lightness</label>
+        </div>
+      </fieldset>
+      <button id="reset">Reset the grid</button>
     </main>
   </body>
 </html>
