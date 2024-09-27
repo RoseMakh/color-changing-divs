@@ -1,6 +1,7 @@
 const cc = console.log;
 const container = document.getElementById("container");
 const resetBtn = document.getElementById("reset");
+const hslValueDisplay = document.getElementById("hslValue");
 
 let speed = 0;
 let divsNum = 40;
@@ -8,6 +9,10 @@ let divVars = {};
 
 let changeMode = "Hue";
 //Hue , Saturation , Lightness
+
+//For the colorChange function
+let d;
+let id;
 
 resetBtn.addEventListener("click", resetGrid);
 
@@ -42,8 +47,10 @@ modeOptions.forEach((e) => {
 });
 
 function colorChange() {
-  let d = divVars[this.id];
-  let id = document.getElementById(this.id);
+  d = divVars[this.id];
+  id = document.getElementById(this.id);
+
+  hslValueDisplay.textContent = `Current Color: hsl( ${d.divHue}, ${d.divSaturation}, ${d.divLightness} )`;
 
   if (changeMode === "Lightness" || changeMode === "Saturation") {
     speed = 1;
@@ -80,4 +87,6 @@ function resetGrid() {
   for (const child of container.children) {
     document.getElementById(child.id).style.backgroundColor = "white";
   }
+  document.getElementById("hslValue").textContent =
+    "Mouse over a square to see its current HSL value.";
 }

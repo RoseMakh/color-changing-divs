@@ -15,36 +15,56 @@
       <h1>Color Changing Divs</h1>
       <p>Mouse over the squares to change their colors.</p>
       <div id="container"></div>
+      <p id="hslValue">Mouse over a square to see its current HSL value.</p>
       <fieldset>
         <legend>Select an HSL parameter to change:</legend>
-        <div>
-          <ul>
-            <li>
-              <input
-                type="radio"
-                id="modeHue"
-                name="mode"
-                value="Hue"
-                checked
-              />
-              <label for="modeHue">Hue</label>
-            </li>
-          </ul>
-          <input
-            type="radio"
-            id="modeSaturation"
-            name="mode"
-            value="Saturation"
-          />
-          <label for="modeSaturation">Saturation</label><br />
-          <input
-            type="radio"
-            id="modeLightness"
-            name="mode"
-            value="Lightness"
-          />
-          <label for="modeLightness">Lightness</label>
-        </div>
+        <ul>
+          <li>
+            <input type="radio" id="modeHue" name="mode" value="Hue" checked />
+            <label for="modeHue">Hue</label>
+          </li>
+          <li>
+            <input
+              type="radio"
+              id="modeSaturation"
+              name="mode"
+              value="Saturation"
+            />
+            <label for="modeSaturation">Saturation</label>
+          </li>
+          <li>
+            <input
+              type="radio"
+              id="modeLightness"
+              name="mode"
+              value="Lightness"
+            />
+            <label for="modeLightness">Lightness</label>
+          </li>
+        </ul>
+      </fieldset>
+      <fieldset>
+        <legend>Select a square size:</legend>
+        <ul>
+          <li>
+            <input type="radio" id="squareSmall" name="size" value="Small" />
+            <label for="squareSmall">Small</label>
+          </li>
+          <li>
+            <input type="radio" id="squareMedium" name="size" value="Medium" />
+            <label for="squareMedium">Medium</label>
+          </li>
+          <li>
+            <input
+              type="radio"
+              id="squareLarge"
+              name="size"
+              value="Large"
+              checked
+            />
+            <label for="squareLarge">Large</label>
+          </li>
+        </ul>
       </fieldset>
       <button id="reset">Reset the grid</button>
     </main>
