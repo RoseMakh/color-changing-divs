@@ -4,7 +4,8 @@ const container = document.getElementById("container");
 let divsNum = 40;
 let divVars = {};
 
-let changeMode = "lightness";
+let changeMode = "Saturation";
+//Hue , Saturation , Lightness
 
 //ADDING DIVS INTO DIVVARS DYNAMICALLY
 for (let i = 1; i <= divsNum; i++) {
@@ -17,10 +18,12 @@ for (let i = 1; i <= divsNum; i++) {
 
   getNewDiv.addEventListener("mousemove", colorChange);
   divVars[divName] = {
-    lightnessDirection: 1,
     divHue: 340,
+    directionHue: 1,
     divSaturation: 100,
-    divLightness: 0,
+    directionSaturation: 1,
+    divLightness: 50,
+    directionLightness: 1,
   };
 }
 
@@ -28,22 +31,27 @@ for (let i = 1; i <= divsNum; i++) {
 cc(divVars);
 
 function colorChange() {
-  /* let xx;
+  /* let changeValue;
 
+if (changeMode==="hue"){
+changeValue = "divHue";
+}
 if (changeMode==="lightness"){
-xx = "divLightness";
+changeValue = "divLightness";
+}
+if (changeMode==="lightness"){
+changeValue = "divLightness";
 } */
-
   let d = divVars[this.id];
   let id = document.getElementById(this.id);
-  if (d.divLightness >= 100) {
-    d.divLightness = 99;
-    d.lightnessDirection = -1;
+  if (d["div" + changeMode] >= 100) {
+    d["div" + changeMode] = 99;
+    d["direction" + changeMode] = -1;
   }
-  if (d.divLightness <= 0) {
-    d.divLightness = 1;
-    d.lightnessDirection = 1;
+  if (d["div" + changeMode] <= 0) {
+    d["div" + changeMode] = 1;
+    d["direction" + changeMode] = 1;
   }
-  d.divLightness += 1 * d.lightnessDirection;
+  d["div" + changeMode] += 1 * d["direction" + changeMode];
   id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
 }
