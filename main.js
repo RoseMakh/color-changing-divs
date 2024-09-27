@@ -1,10 +1,11 @@
 const cc = console.log;
 const container = document.getElementById("container");
 
+let speed = 0;
 let divsNum = 40;
 let divVars = {};
 
-let changeMode = "Saturation";
+let changeMode = "Hue";
 //Hue , Saturation , Lightness
 
 //ADDING DIVS INTO DIVVARS DYNAMICALLY
@@ -31,27 +32,25 @@ for (let i = 1; i <= divsNum; i++) {
 cc(divVars);
 
 function colorChange() {
-  /* let changeValue;
-
-if (changeMode==="hue"){
-changeValue = "divHue";
-}
-if (changeMode==="lightness"){
-changeValue = "divLightness";
-}
-if (changeMode==="lightness"){
-changeValue = "divLightness";
-} */
   let d = divVars[this.id];
   let id = document.getElementById(this.id);
-  if (d["div" + changeMode] >= 100) {
-    d["div" + changeMode] = 99;
-    d["direction" + changeMode] = -1;
+
+  if (changeMode === "Lightness" || changeMode === "Saturation") {
+    speed = 1;
+    if (d["div" + changeMode] >= 100) {
+      d["div" + changeMode] = 99;
+      d["direction" + changeMode] = -1;
+    }
+    if (d["div" + changeMode] <= 0) {
+      d["div" + changeMode] = 1;
+      d["direction" + changeMode] = 1;
+    }
+  } else {
+    speed = 5;
+    if (d["div" + changeMode] > 360) {
+      d["div" + changeMode] = 0;
+    }
   }
-  if (d["div" + changeMode] <= 0) {
-    d["div" + changeMode] = 1;
-    d["direction" + changeMode] = 1;
-  }
-  d["div" + changeMode] += 1 * d["direction" + changeMode];
+  d["div" + changeMode] += speed * d["direction" + changeMode];
   id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
 }
