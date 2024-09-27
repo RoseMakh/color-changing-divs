@@ -1,0 +1,30 @@
+html {
+  --divHeight: 50px;
+  --divWidth: 50px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  margin: 5px;
+  text-align: center;
+}
+
+#container {
+  width: 400px;
+  background-color: gray;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#container div {
+  height: var(--divHeight);
+  width: var(--divWidth);
+  background-color: white;
+  border: 2px dotted black;
+  /* display: inline-block; */
+}
