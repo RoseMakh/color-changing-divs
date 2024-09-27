@@ -1,6 +1,6 @@
 :root {
-  --divHeight: 50px;
-  --divWidth: 50px;
+  /*   --divHeight: 50px;
+    --divWidth: 50px; */
   font-family: sans-serif;
   color: rebeccapurple;
   text-align: center;
@@ -13,7 +13,7 @@
 }
 
 h1 {
-  margin: 15px 0;
+  margin: 15px 0 5px 0;
 }
 
 #container {
@@ -25,8 +25,8 @@ h1 {
 }
 
 #container div {
-  height: var(--divHeight);
-  width: var(--divWidth);
+  /*  height: var(--divHeight);
+    width: var(--divWidth); */
   background-color: white;
   /* border: 2px dotted black; */
 }
@@ -93,6 +93,10 @@ button:hover {
 }
 
 #hslValue {
-  margin: 20px auto;
+  margin: 10px auto 20px auto;
   width: 390px;
+}
+
+p:nth-of-type(1) {
+  margin-bottom: 20px;
 }
