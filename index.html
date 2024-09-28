@@ -14,60 +14,84 @@
     <main>
       <h1>Color Changing Divs</h1>
       <p>By RoseMakh, September/October 2024</p>
-      <p>Mouse over the squares to change their colors.</p>
-      <div id="container"></div>
-      <p id="hslValue">Mouse over a square to see its current HSL value.</p>
-      <fieldset>
-        <legend>Select an HSL parameter to change:</legend>
-        <ul>
-          <li>
-            <input type="radio" id="modeHue" name="mode" value="Hue" checked />
-            <label for="modeHue">Hue</label>
-          </li>
-          <li>
-            <input
-              type="radio"
-              id="modeSaturation"
-              name="mode"
-              value="Saturation"
-            />
-            <label for="modeSaturation">Saturation</label>
-          </li>
-          <li>
-            <input
-              type="radio"
-              id="modeLightness"
-              name="mode"
-              value="Lightness"
-            />
-            <label for="modeLightness">Lightness</label>
-          </li>
-        </ul>
-      </fieldset>
-      <fieldset>
-        <legend>Select a square size:</legend>
-        <ul>
-          <li>
-            <input type="radio" id="squareSmall" name="size" value="Small" />
-            <label for="squareSmall">Small</label>
-          </li>
-          <li>
-            <input type="radio" id="squareMedium" name="size" value="Medium" />
-            <label for="squareMedium">Medium</label>
-          </li>
-          <li>
-            <input
-              type="radio"
-              id="squareLarge"
-              name="size"
-              value="Large"
-              checked
-            />
-            <label for="squareLarge">Large</label>
-          </li>
-        </ul>
-      </fieldset>
-      <button id="reset">Reset the colors</button>
+
+      <div id="containerContainer">
+        <div id="divContainer" class="contentContainer"></div>
+        <div class="contentContainer">
+          <p>Mouse over the squares to change their colors.</p>
+          <p>Current Square: hsl( <span id="hslValue"></span> )</p>
+          <fieldset>
+            <legend>
+              Select an HSL <br />
+              parameter to change:
+            </legend>
+            <ul>
+              <li>
+                <input
+                  type="radio"
+                  id="modeHue"
+                  name="mode"
+                  value="Hue"
+                  checked
+                />
+                <label for="modeHue">Hue</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="modeSaturation"
+                  name="mode"
+                  value="Saturation"
+                />
+                <label for="modeSaturation">Saturation</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="modeLightness"
+                  name="mode"
+                  value="Lightness"
+                />
+                <label for="modeLightness">Lightness</label>
+              </li>
+            </ul>
+          </fieldset>
+          <fieldset>
+            <legend>Select a square size:</legend>
+            <ul>
+              <li>
+                <input
+                  type="radio"
+                  id="squareSmall"
+                  name="size"
+                  value="Small"
+                />
+                <label for="squareSmall">Small</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="squareMedium"
+                  name="size"
+                  value="Medium"
+                />
+                <label for="squareMedium">Medium</label>
+              </li>
+              <li>
+                <input
+                  type="radio"
+                  id="squareLarge"
+                  name="size"
+                  value="Large"
+                  checked
+                />
+                <label for="squareLarge">Large</label>
+              </li>
+            </ul>
+          </fieldset>
+          <button id="reset">Reset the colors</button>
+        </div>
+      </div>
     </main>
   </body>
 </html>
