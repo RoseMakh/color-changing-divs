@@ -1,8 +1,13 @@
 :root {
-  font-family: sans-serif;
-  color: rebeccapurple;
-  text-align: center;
   --font-thicker: 600;
+  --transition-1: 0.5s;
+  --color-1: darkmagenta;
+  --color-2: rebeccapurple;
+  --select-color: magenta;
+  --divContainerPrintSize: 400px;
+  font-family: sans-serif;
+  color: var(--color-2);
+  text-align: center;
 }
 
 * {
@@ -12,12 +17,8 @@
 }
 
 h1 {
-  margin: 15px 0 5px 0;
+  margin: 10px 0 5px 0;
 }
-
-/* div {
-  border: 2px dotted red;
-} */
 
 #containerContainer {
   /* border: 1px dotted lightseagreen; */
@@ -30,15 +31,46 @@ h1 {
 
 #divContainer {
   box-sizing: content-box;
-  /* width: 400px;
-  height: 400px; */
-  border: 4px solid darkmagenta;
-  background-color: darkmagenta;
+  border: 4px solid var(--color-1);
+  background-color: var(--color-1);
+  transition: var(--transition-1);
   display: flex;
   justify-content: center;
   align-content: center;
   flex-shrink: 0;
   flex-wrap: wrap;
+}
+
+#mobileMenuDiv {
+  background-color: white;
+  transition: 0.5s;
+}
+
+.mobleMenuMobile {
+  width: 100vw;
+  position: absolute;
+  left: 0;
+  padding: 0 5%;
+  top: 0;
+}
+
+.hiddenByMove {
+  top: -100%;
+}
+
+.hiddenByDisplay {
+  display: none;
+}
+
+#mobileMenuBtn {
+  background-color: green;
+  /* border-radius: 5px; */
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .contentContainer:nth-child(2) {
@@ -55,7 +87,7 @@ p {
 
 fieldset {
   padding: 5px;
-  border-color: darkmagenta;
+  border-color: var(--color-1);
   border-radius: 10px;
   display: flex;
   flex-wrap: nowrap;
@@ -71,10 +103,10 @@ fieldset {
     border-radius: 5px;
     display: inline-block;
     padding: 10px 5px;
-    transition: 0.5s;
+    transition: var(--transition-1);
 
     &:hover {
-      background-color: rebeccapurple;
+      background-color: var(--color-2);
       color: white;
     }
   }
@@ -82,7 +114,7 @@ fieldset {
 
 legend {
   color: white;
-  background-color: darkmagenta;
+  background-color: var(--color-1);
   padding: 6px;
   font-size: 1rem;
   font-weight: var(--font-thicker);
@@ -93,24 +125,61 @@ legend {
 
 button {
   color: inherit;
-  width: 250px;
   font-size: inherit;
-  font-weight: var(--font-thicker);
-  display: block;
-  margin: 40px auto;
-  height: 2rem;
   background-color: white;
-  border: 2px solid darkmagenta;
+  border: 2px solid var(--color-1);
   border-radius: 2rem;
-  transition: 0.5s;
+  transition: var(--transition-1);
 
   &:hover {
-    background-color: darkmagenta;
+    background-color: var(--color-1);
     color: white;
   }
+}
+
+#resetBtn {
+  width: 250px;
+  font-weight: var(--font-thicker);
+  display: block;
+  margin: 30px auto 10px auto;
+  height: 2rem;
+}
+
+#smallBtnContainer {
+  width: 100%;
+}
+
+.inlineBtn {
+  display: inline-block;
+  margin: 0;
+  width: 30%;
 }
 
 #hslValue {
   margin: 10px auto 20px auto;
   width: 390px;
+}
+
+.noMouseoverModeMarker {
+  border-color: var(--select-color) !important;
+  box-shadow: 0 0 3px 2px var(--select-color);
+  background-color: var(--color-1);
+  color: white;
+}
+
+@media screen and (max-width: 374px) {
+  h1 {
+    margin-top: 30px;
+  }
+}
+
+@media print {
+  .contentContainer:nth-child(2),
+  #mobileMenuBtn {
+    display: none;
+  }
+
+  p:last-of-type {
+    margin-top: 25px;
+  }
 }

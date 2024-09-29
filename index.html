@@ -20,76 +20,86 @@
         <div class="contentContainer">
           <p>Mouse over the squares to change their colors.</p>
           <p>Current Square: hsl( <span id="hslValue"></span> )</p>
-          <fieldset>
-            <legend>
-              Select an HSL <br />
-              parameter to change:
-            </legend>
-            <ul>
-              <li>
-                <input
-                  type="radio"
-                  id="modeHue"
-                  name="mode"
-                  value="Hue"
-                  checked
-                />
-                <label for="modeHue">Hue</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  id="modeSaturation"
-                  name="mode"
-                  value="Saturation"
-                />
-                <label for="modeSaturation">Saturation</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  id="modeLightness"
-                  name="mode"
-                  value="Lightness"
-                />
-                <label for="modeLightness">Lightness</label>
-              </li>
-            </ul>
-          </fieldset>
-          <fieldset>
-            <legend>Select a square size:</legend>
-            <ul>
-              <li>
-                <input
-                  type="radio"
-                  id="squareSmall"
-                  name="size"
-                  value="Small"
-                />
-                <label for="squareSmall">Small</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  id="squareMedium"
-                  name="size"
-                  value="Medium"
-                />
-                <label for="squareMedium">Medium</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  id="squareLarge"
-                  name="size"
-                  value="Large"
-                  checked
-                />
-                <label for="squareLarge">Large</label>
-              </li>
-            </ul>
-          </fieldset>
-          <button id="reset">Reset the colors</button>
+          <div id="mobileMenuDiv">
+            <p id="mobileMenuP" class="hiddenByDisplay">
+              Options (style this later)
+            </p>
+            <fieldset>
+              <legend>
+                Select an HSL <br />
+                parameter to change:
+              </legend>
+              <ul>
+                <li>
+                  <input
+                    type="radio"
+                    id="modeHue"
+                    name="mode"
+                    value="Hue"
+                    checked
+                  />
+                  <label for="modeHue">Hue</label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="modeSaturation"
+                    name="mode"
+                    value="Saturation"
+                  />
+                  <label for="modeSaturation">Saturation</label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="modeLightness"
+                    name="mode"
+                    value="Lightness"
+                  />
+                  <label for="modeLightness">Lightness</label>
+                </li>
+              </ul>
+            </fieldset>
+            <fieldset>
+              <legend>Select a square size:</legend>
+              <ul>
+                <li>
+                  <input
+                    type="radio"
+                    id="squareSmall"
+                    name="size"
+                    value="Small"
+                  />
+                  <label for="squareSmall">Small</label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="squareMedium"
+                    name="size"
+                    value="Medium"
+                  />
+                  <label for="squareMedium">Medium</label>
+                </li>
+                <li>
+                  <input
+                    type="radio"
+                    id="squareLarge"
+                    name="size"
+                    value="Large"
+                    checked
+                  />
+                  <label for="squareLarge">Large</label>
+                </li>
+              </ul>
+            </fieldset>
+            <button id="resetBtn">Reset the colors</button>
+            <div id="smallBtnContainer">
+              <button id="innerBtn" class="inlineBtn">Inner</button>
+              <button id="selectBtn" class="inlineBtn">Select</button>
+              <button id="printBtn" class="inlineBtn">Print</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>

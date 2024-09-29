@@ -1,8 +1,11 @@
 //VARIABLE DECLARATIONS
 const cc = console.log; //for testing
-const divContainer = document.getElementById("divContainer"); //container that holds the divs
-const resetBtn = document.getElementById("reset"); //button that resets hsl in the object and resets all divs background color to default
+const getMain = document.getElementsByTagName("main")[0]; //the <main> element
+const getDivContainer = document.getElementById("divContainer"); //container that holds the divs
+const getResetBtn = document.getElementById("resetBtn"); //button that resets hsl in the object and resets all divs background color to default
 const hslValueDisplay = document.getElementById("hslValue"); //element that displays the HSL value of the current or last div
+const getMobileMenuDiv = document.getElementById("mobileMenuDiv");
+const getMobileMenuBtn = document.getElementById("mobileMenuBtn");
 
 let changeSize = "Large"; //div size
 let sizeValue = ""; //current height/width for divs
@@ -11,14 +14,17 @@ let startDiv = 1; //number of the starting div for adding divs to the divContain
 let prevStartDiv = 0; //the previous value of startDiv
 let divsNum = 0; //number of divs per row or column
 let prevDivsNum = 0; //previous number or divs per row or column
-let divContainerSize = Math.min(400, window.visualViewport.width * 0.95); //height and width of the div container
+let divContainerSize = Math.min(400, window.visualViewport.width * 0.9); //height and width of the div container
 let divVars = {}; //object that holds all the div stats
 
 //Used to determine which HSL parameter to manipulate
 //Options: Hue , Saturation , Lightness
 let changeMode = "Hue";
 
-//Used inside the colorChange function only. Declared here so they aren't created anew on evey mouse move
+let mouseoverMode = "mouse";
+//mouse: mouseover actions allowed; inner: inner mode only; select: select mode only
+
+//Used inside the colorChange function only. Declared here so they aren't created anew on every mouse move
 let d;
 let id;
 
@@ -33,16 +39,37 @@ const divVarsDivStatsDefault = {
   divLightness: 50,
   directionLightness: 1,
 };
-
 ////END OF VARIABLE DECLARATIONS SECTION
 
 hslValueDisplay.textContent = hslValueDisplayDefault;
 
-divContainer.style.width = divContainerSize + "px";
-divContainer.style.height = divContainerSize + "px";
+//set the size of the color divs
+getDivContainer.style.height = divContainerSize + "px";
+getDivContainer.style.width = divContainerSize + "px";
+
+//change the layout if viewport orientation is vertical/portrait
+if (window.visualViewport.width < window.visualViewport.height) {
+  function mobileMenuHideShow() {
+    getMobileMenuDiv.classList.toggle("hiddenByMove");
+  }
+
+  getMain.style.height = window.visualViewport.height + "px";
+  getMain.style.overflow = "hidden"; //prevent scrolling
+
+  //create the button that shows and hides the mobile menu
+  let newBtn = document.createElement("BUTTON");
+  newBtn.setAttribute("id", "mobileMenuBtn");
+  getMain.append(newBtn);
+  document
+    .getElementById("mobileMenuBtn")
+    .addEventListener("click", mobileMenuHideShow);
+
+  getMobileMenuDiv.classList.add("mobleMenuMobile", "hiddenByMove");
+  document.getElementById("mobileMenuP").classList.toggle("hiddenByDisplay");
+}
 
 function changeDivsSize() {
-  for (const child of divContainer.children) {
+  for (const child of getDivContainer.children) {
     document.getElementById(child.id).style.width = sizeValue;
     document.getElementById(child.id).style.height = sizeValue;
   }
@@ -75,7 +102,7 @@ function determineNums() {
       break;
   }
 
-  //This IF doesn't run on load
+  //This if statement doesn't run on load
   if (prevDivsNum !== 0) {
     //larger divs = fewer divs, so remove some before changing their sizes
     if (prevDivsNum > divsNum) {
@@ -100,7 +127,7 @@ function addDivs(divs) {
     let newDiv = document.createElement("DIV");
     newDiv.setAttribute("id", divName);
 
-    divContainer.append(newDiv);
+    getDivContainer.append(newDiv);
     let getNewDiv = document.getElementById(divName);
 
     getNewDiv.style.width = sizeValue;
@@ -116,6 +143,7 @@ function addDivs(divs) {
 }
 addDivs(1); //the first div is div1
 
+//selects hue, saturation, or lightness
 function selectMode() {
   changeMode = this.value;
 }
@@ -143,44 +171,106 @@ sizeOptions.forEach((e) => {
 
 //Change the div colors
 function colorChange() {
-  d = divVars[this.id];
-  id = document.getElementById(this.id);
+  if (mouseoverMode === "mouse") {
+    d = divVars[this.id];
+    id = document.getElementById(this.id);
 
-  hslValueDisplay.textContent = `${d.divHue}, ${d.divSaturation}, ${d.divLightness}`;
+    hslValueDisplay.textContent = `${d.divHue}, ${d.divSaturation}, ${d.divLightness}`;
 
-  //Change some values depending on the current HSL parameter mode
-  if (changeMode === "Lightness" || changeMode === "Saturation") {
-    speed = 1;
-    if (d["div" + changeMode] >= 100) {
-      d["div" + changeMode] = 99;
-      d["direction" + changeMode] = -1;
+    //Change some values depending on the current HSL parameter mode
+    if (changeMode === "Lightness" || changeMode === "Saturation") {
+      speed = 1;
+      if (d["div" + changeMode] >= 100) {
+        d["div" + changeMode] = 99;
+        d["direction" + changeMode] = -1;
+      }
+      if (d["div" + changeMode] <= 0) {
+        d["div" + changeMode] = 1;
+        d["direction" + changeMode] = 1;
+      }
+    } else {
+      speed = 5;
+      if (d["div" + changeMode] > 360) {
+        d["div" + changeMode] = 0;
+      }
     }
-    if (d["div" + changeMode] <= 0) {
-      d["div" + changeMode] = 1;
-      d["direction" + changeMode] = 1;
-    }
-  } else {
-    speed = 5;
-    if (d["div" + changeMode] > 360) {
-      d["div" + changeMode] = 0;
-    }
+
+    //Update the HSL value display
+    d["div" + changeMode] += speed * d["direction" + changeMode];
+    id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
   }
-
-  //Update the HSL value display
-  d["div" + changeMode] += speed * d["direction" + changeMode];
-  id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
 }
 
-resetBtn.addEventListener("click", resetGrid);
+////MOUSEOVER MODE FUNCTIONS
+
+//get the button's mode by removing Btn from the end of its id
+function getMouseoverModeName(string) {
+  const len = string.length;
+  let i = string.split("");
+  for (j = len - 1; j > len - 4; j--) {
+    i.pop();
+  }
+  return i.join("");
+}
+
+//change the mouseover mode and toggle style classes accordingly
+function ChangeMouseoverMode() {
+  if (
+    (this.id === "selectBtn" && mouseoverMode === "inner") ||
+    (this.id === "innerBtn" && mouseoverMode === "select")
+  ) {
+    return;
+  }
+
+  const thisBtnModeName = getMouseoverModeName(this.id);
+
+  mouseoverMode === "mouse"
+    ? (mouseoverMode = thisBtnModeName)
+    : (mouseoverMode = "mouse");
+
+  getDivContainer.classList.toggle("noMouseoverModeMarker");
+  document.getElementById(this.id).classList.toggle("noMouseoverModeMarker");
+}
+
+document
+  .getElementById("innerBtn")
+  .addEventListener("click", ChangeMouseoverMode);
+
+document
+  .getElementById("selectBtn")
+  .addEventListener("click", ChangeMouseoverMode);
+
+getResetBtn.addEventListener("click", resetGrid);
+document
+  .getElementById("printBtn")
+  .addEventListener("click", print.bind(window));
 
 //Reset the divs, div objects, and HSL value display to their defaults
 function resetGrid() {
   for (const e in divVars) {
     divVars[e] = { ...divVarsDivStatsDefault };
   }
-  for (const child of divContainer.children) {
+  for (const child of getDivContainer.children) {
     document.getElementById(child.id).style.backgroundColor =
       divBackgroundColorDefault;
   }
   hslValueDisplay.textContent = hslValueDisplayDefault;
 }
+
+////BEFORE AND AFTER PRINT FUNCTIONS
+
+window.addEventListener("beforeprint", (event) => {
+  let newP = document.createElement("P");
+  newP.textContent = `test`;
+  getMain.append(newP);
+  newP.textContent = `Printed on ${new Date().toLocaleDateString("en-us", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })}`;
+});
+
+window.addEventListener("afterprint", (event) => {
+  getMain.lastElementChild.remove();
+});
