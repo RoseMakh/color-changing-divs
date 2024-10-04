@@ -46,7 +46,8 @@ h1 {
   transition: 0.5s;
 }
 
-.mobleMenuMobile {
+/*styles the mobile menu for mobile screens*/
+.mobileMenuMobile {
   width: 100vw;
   position: absolute;
   left: 0;
@@ -75,10 +76,14 @@ h1 {
 
 .contentContainer:nth-child(2) {
   width: min(350px, 95%);
+}
 
-  & p:nth-child(2) {
-    font-weight: var(--font-thicker);
-  }
+.contentContainer:nth-child(2) p:nth-child(2) {
+  font-weight: var(--font-thicker);
+}
+
+.contentContainer:nth-child(3) {
+  width: 100%;
 }
 
 p {
@@ -155,6 +160,18 @@ button {
   width: 30%;
 }
 
+.deactivatedBtn {
+  border-color: gray;
+  color: gray;
+  background-color: lightgray;
+
+  &:hover {
+    border-color: gray;
+    color: gray;
+    background-color: lightgray;
+  }
+}
+
 #hslValue {
   margin: 10px auto 20px auto;
   width: 390px;
@@ -165,6 +182,10 @@ button {
   box-shadow: 0 0 3px 2px var(--select-color);
   background-color: var(--color-1);
   color: white;
+}
+
+.selectModeDivMarker {
+  border: 3px solid aqua;
 }
 
 @media screen and (max-width: 374px) {

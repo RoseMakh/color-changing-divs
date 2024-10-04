@@ -2,12 +2,20 @@
 const cc = console.log; //for testing
 const getMain = document.getElementsByTagName("main")[0]; //the <main> element
 const getDivContainer = document.getElementById("divContainer"); //container that holds the divs
+const getContentContainer2 = document.getElementById("contentContainer2");
 const getResetBtn = document.getElementById("resetBtn"); //button that resets hsl in the object and resets all divs background color to default
-const hslValueDisplay = document.getElementById("hslValue"); //element that displays the HSL value of the current or last div
+const getPrintBtn = document.getElementById("printBtn");
+const getInnerBtn = document.getElementById("innerBtn");
+const getSelectBtn = document.getElementById("selectBtn");
+const getHslValue = document.getElementById("hslValue"); //element that displays the HSL value of the current or last div
 const getMobileMenuDiv = document.getElementById("mobileMenuDiv");
 const getMobileMenuBtn = document.getElementById("mobileMenuBtn");
+const getMobileMenuP = document.getElementById("mobileMenuP");
+const getDateP = document.getElementById("dateP");
+const getSelectModeSelections = document.getElementById("selectModeSelections");
+const getHiddenPrintables = document.getElementById("hiddenPrintables");
 
-let changeSize = "Large"; //div size
+let divSize = "Large"; //div size
 let sizeValue = ""; //current height/width for divs
 let speed = 0; //speed at which an HSL parameter changes
 let startDiv = 1; //number of the starting div for adding divs to the divContainer
@@ -16,13 +24,19 @@ let divsNum = 0; //number of divs per row or column
 let prevDivsNum = 0; //previous number or divs per row or column
 let divContainerSize = Math.min(400, window.visualViewport.width * 0.9); //height and width of the div container
 let divVars = {}; //object that holds all the div stats
+let selectModeDivArray = []; //holds the HSL values of selected divs in Div Select Mode
+
+let innerOrSelectMousable = false;
+
+let currentElem;
+//let divSelectMode = ""; //Options: inner, hsl
 
 //Used to determine which HSL parameter to manipulate
-//Options: Hue , Saturation , Lightness
-let changeMode = "Hue";
+//Options -- Hue , Saturation , Lightness
+let hslMode = "Hue";
 
+//Options -- mouse: mouseover actions allowed; inner: inner mode only; select: select mode only
 let mouseoverMode = "mouse";
-//mouse: mouseover actions allowed; inner: inner mode only; select: select mode only
 
 //Used inside the colorChange function only. Declared here so they aren't created anew on every mouse move
 let d;
@@ -41,16 +55,30 @@ const divVarsDivStatsDefault = {
 };
 ////END OF VARIABLE DECLARATIONS SECTION
 
-hslValueDisplay.textContent = hslValueDisplayDefault;
+getHslValue.textContent = hslValueDisplayDefault;
+
+getDateP.textContent = `Printed on ${new Date().toLocaleDateString("en-us", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+})}`;
 
 //set the size of the color divs
 getDivContainer.style.height = divContainerSize + "px";
 getDivContainer.style.width = divContainerSize + "px";
 
+//toggle 1 class of 1 or more elements. when invoking, pass in as many elements as desired after the class name
+function toggleClass(className, ...elements) {
+  for (i = 0; i < elements.length; i++) {
+    elements[i].classList.toggle(className);
+  }
+}
+
 //change the layout if viewport orientation is vertical/portrait
 if (window.visualViewport.width < window.visualViewport.height) {
   function mobileMenuHideShow() {
-    getMobileMenuDiv.classList.toggle("hiddenByMove");
+    toggleClass("hiddenByMove", getMobileMenuDiv);
   }
 
   getMain.style.height = window.visualViewport.height + "px";
@@ -64,8 +92,8 @@ if (window.visualViewport.width < window.visualViewport.height) {
     .getElementById("mobileMenuBtn")
     .addEventListener("click", mobileMenuHideShow);
 
-  getMobileMenuDiv.classList.add("mobleMenuMobile", "hiddenByMove");
-  document.getElementById("mobileMenuP").classList.toggle("hiddenByDisplay");
+  getMobileMenuDiv.classList.add("mobileMenuMobile", "hiddenByMove");
+  toggleClass("hiddenByDisplay", getMobileMenuP);
 }
 
 function changeDivsSize() {
@@ -87,7 +115,7 @@ function removeDivs() {
 
 //Update the number of divs per column/row and the height/width of the divs
 function determineNums() {
-  switch (changeSize) {
+  switch (divSize) {
     case "Small":
       divsNum = 20;
       sizeValue = divContainerSize / divsNum + "px";
@@ -134,6 +162,7 @@ function addDivs(divs) {
     getNewDiv.style.height = sizeValue;
     getNewDiv.style.backgroundColor = divBackgroundColorDefault;
     getNewDiv.addEventListener("mousemove", colorChange);
+    getNewDiv.addEventListener("click", divInnerorSelectMode);
 
     //If the div's object isn't in divVars, add it
     if (!divVars[divName]) {
@@ -141,11 +170,11 @@ function addDivs(divs) {
     }
   }
 }
-addDivs(1); //the first div is div1
+addDivs(1); //the first time this runs, the first div is div1
 
 //selects hue, saturation, or lightness
 function selectMode() {
-  changeMode = this.value;
+  hslMode = this.value;
 }
 
 //Add event listener to the mode select radio inputs
@@ -156,9 +185,9 @@ modeOptions.forEach((e) => {
 
 //if user selects a new size, update variables before calculating the new values
 function selectSize() {
-  if (this.value !== changeSize) {
+  if (this.value !== divSize) {
     prevDivsNum = divsNum;
-    changeSize = this.value;
+    divSize = this.value;
     determineNums();
   }
 }
@@ -171,35 +200,91 @@ sizeOptions.forEach((e) => {
 
 //Change the div colors
 function colorChange() {
-  if (mouseoverMode === "mouse") {
-    d = divVars[this.id];
-    id = document.getElementById(this.id);
+  if (
+    (mouseoverMode === "inner" && innerOrSelectMousable != true) ||
+    mouseoverMode === "select"
+  ) {
+    return;
+  }
+  d = divVars[this.id];
+  id = document.getElementById(this.id);
 
-    hslValueDisplay.textContent = `${d.divHue}, ${d.divSaturation}, ${d.divLightness}`;
+  getHslValue.textContent = `${d.divHue}, ${d.divSaturation}, ${d.divLightness}`;
 
-    //Change some values depending on the current HSL parameter mode
-    if (changeMode === "Lightness" || changeMode === "Saturation") {
-      speed = 1;
-      if (d["div" + changeMode] >= 100) {
-        d["div" + changeMode] = 99;
-        d["direction" + changeMode] = -1;
-      }
-      if (d["div" + changeMode] <= 0) {
-        d["div" + changeMode] = 1;
-        d["direction" + changeMode] = 1;
+  //Change some values depending on the current HSL parameter mode
+  if (hslMode === "Lightness" || hslMode === "Saturation") {
+    speed = 1;
+    if (d["div" + hslMode] >= 100) {
+      d["div" + hslMode] = 99;
+      d["direction" + hslMode] = -1;
+    }
+    if (d["div" + hslMode] <= 0) {
+      d["div" + hslMode] = 1;
+      d["direction" + hslMode] = 1;
+    }
+  } else {
+    speed = 5;
+    if (d["div" + hslMode] > 360) {
+      d["div" + hslMode] = 0;
+    }
+  }
+
+  //Update the HSL value display
+  d["div" + hslMode] += speed * d["direction" + hslMode];
+  id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
+}
+
+//FUNCTION FOR DIV INNER AND SELECT MODES
+function divInnerorSelectMode() {
+  ////Stuff for Inner Mode
+  if (mouseoverMode === "inner") {
+    innerOrSelectMousable === false
+      ? (innerOrSelectMousable = true)
+      : (innerOrSelectMousable = false);
+  }
+
+  ////Stuff for Select Mode
+  function pushColor(elem, getElem) {
+    let elemHslVal = "";
+
+    if (elem !== "white") {
+      elemHslVal = `hsl( ${divVars[elem].divHue}, ${divVars[elem].divSaturation}, ${divVars[elem].divLightness} )`;
+    } else {
+      elemHslVal = `hsl( ${divVarsDivStatsDefault.divHue}, 100, 100 )`;
+      // selectModeDivArray.push(elemHslVal);
+    }
+    selectModeDivArray.push(elemHslVal);
+  }
+
+  if (mouseoverMode === "select") {
+    let elem = this.id;
+    getElem = document.getElementById(elem);
+    //cc("getelem is " + getElem);
+    if (!this.classList.contains("selectModeDivMarker")) {
+      if (
+        this.style.backgroundColor === "white" &&
+        !selectModeDivArray.includes(
+          `hsl( ${divVarsDivStatsDefault.divHue}, 100, 100 )`
+        )
+      ) {
+        pushColor("white");
+        getElem.classList.toggle("selectModeDivMarker");
+        //toggleClass("selectModeDivMarker", [getElem]);
+      } else if (!selectModeDivArray.includes(elemHslVal)) {
+        pushColor(getElem);
+        getElem.classList.toggle("selectModeDivMarker");
+        //toggleClass("selectModeDivMarker", [getElem]);
       }
     } else {
-      speed = 5;
-      if (d["div" + changeMode] > 360) {
-        d["div" + changeMode] = 0;
-      }
+      //remove div's hsl value from the array
+      selectModeDivArray = selectModeDivArray.filter((e) => e !== elemHslVal);
+      getElem.classList.toggle("selectModeDivMarker");
+      //toggleClass("selectModeDivMarker", [getElem]);
     }
-
-    //Update the HSL value display
-    d["div" + changeMode] += speed * d["direction" + changeMode];
-    id.style.backgroundColor = `hsl(${d.divHue} ${d.divSaturation} ${d.divLightness})`;
   }
+  cc("selectmodearr is " + selectModeDivArray);
 }
+//}
 
 ////MOUSEOVER MODE FUNCTIONS
 
@@ -224,14 +309,26 @@ function ChangeMouseoverMode() {
 
   const thisBtnModeName = getMouseoverModeName(this.id);
 
+  //toggle whether or not color divs can be moused over (for inner and select modes)
+  //correctly sets the variables for divInnerMode and divSelectMode
+  if (this.id === "selectBtn" || this.id === "innerBtn") {
+    mouseoverMode !== thisBtnModeName
+      ? innerOrSelectMousable === false
+      : innerOrSelectMousable === true;
+  }
+
   mouseoverMode === "mouse"
     ? (mouseoverMode = thisBtnModeName)
     : (mouseoverMode = "mouse");
 
-  getDivContainer.classList.toggle("noMouseoverModeMarker");
+  toggleClass("noMouseoverModeMarker", getDivContainer);
   document.getElementById(this.id).classList.toggle("noMouseoverModeMarker");
+
+  toggleClass("deactivatedBtn", getInnerBtn, getSelectBtn);
+  document.getElementById(this.id).classList.toggle("deactivatedBtn");
 }
 
+////ADD BUTTON EVENT LISTENERS (except mobile menu hamburger button)
 document
   .getElementById("innerBtn")
   .addEventListener("click", ChangeMouseoverMode);
@@ -241,9 +338,7 @@ document
   .addEventListener("click", ChangeMouseoverMode);
 
 getResetBtn.addEventListener("click", resetGrid);
-document
-  .getElementById("printBtn")
-  .addEventListener("click", print.bind(window));
+getPrintBtn.addEventListener("click", print.bind(window));
 
 //Reset the divs, div objects, and HSL value display to their defaults
 function resetGrid() {
@@ -254,23 +349,19 @@ function resetGrid() {
     document.getElementById(child.id).style.backgroundColor =
       divBackgroundColorDefault;
   }
-  hslValueDisplay.textContent = hslValueDisplayDefault;
+  getHslValue.textContent = hslValueDisplayDefault;
 }
 
 ////BEFORE AND AFTER PRINT FUNCTIONS
 
-window.addEventListener("beforeprint", (event) => {
-  let newP = document.createElement("P");
-  newP.textContent = `test`;
-  getMain.append(newP);
-  newP.textContent = `Printed on ${new Date().toLocaleDateString("en-us", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })}`;
-});
+function beforePrint() {
+  toggleClass("hiddenByDisplay", getHiddenPrintables);
+}
 
-window.addEventListener("afterprint", (event) => {
-  getMain.lastElementChild.remove();
-});
+function afterPrint() {
+  toggleClass("hiddenByDisplay", getHiddenPrintables);
+}
+
+window.addEventListener("beforeprint", beforePrint);
+
+window.addEventListener("afterprint", afterPrint);
