@@ -3,7 +3,7 @@
   --transition-1: 0.5s;
   --color-1: darkmagenta;
   --color-2: rebeccapurple;
-  --select-color: magenta;
+  --glow-color: magenta;
   --divContainerPrintSize: 400px;
   font-family: sans-serif;
   color: var(--color-2);
@@ -46,7 +46,8 @@ h1 {
   transition: 0.5s;
 }
 
-.mobleMenuMobile {
+/*styles the mobile menu for mobile screens*/
+.mobileMenuMobile {
   width: 100vw;
   position: absolute;
   left: 0;
@@ -75,10 +76,23 @@ h1 {
 
 .contentContainer:nth-child(2) {
   width: min(350px, 95%);
+}
 
-  & p:nth-child(2) {
-    font-weight: var(--font-thicker);
-  }
+.contentContainer:nth-child(2) p:nth-child(2) {
+  font-weight: var(--font-thicker);
+}
+
+#listModeContent {
+  width: 100%;
+}
+
+#hiddenPrintables {
+  width: 100%;
+}
+
+.listModeLiBtn {
+  width: 1em;
+  height: 1em;
 }
 
 p {
@@ -155,16 +169,41 @@ button {
   width: 30%;
 }
 
+.deactivatedBtn {
+  border-color: gray;
+  color: gray;
+  background-color: lightgray;
+
+  &:hover {
+    border-color: gray;
+    color: gray;
+    background-color: lightgray;
+  }
+}
+
 #hslValue {
   margin: 10px auto 20px auto;
   width: 390px;
 }
 
 .noMouseoverModeMarker {
-  border-color: var(--select-color) !important;
-  box-shadow: 0 0 3px 2px var(--select-color);
+  border-color: var(--glow-color) !important;
+  box-shadow: 0 0 3px 2px var(--glow-color);
   background-color: var(--color-1);
   color: white;
+}
+
+#listModeSelections {
+  list-style-type: none;
+}
+
+.listModeSelectionsDiv {
+  width: 1em;
+  height: 1em;
+}
+
+li div {
+  display: inline-block;
 }
 
 @media screen and (max-width: 374px) {
@@ -174,9 +213,14 @@ button {
 }
 
 @media print {
-  .contentContainer:nth-child(2),
-  #mobileMenuBtn {
+  #contentContainer2,
+  #mobileMenuBtn,
+  #listModeSelections > li > div:nth-child(2) {
     display: none;
+  }
+
+  #dateP {
+    display: block;
   }
 
   p:last-of-type {

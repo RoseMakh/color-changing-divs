@@ -13,13 +13,14 @@
   <body>
     <main>
       <h1>Color Changing Divs</h1>
-      <p>By RoseMakh, September/October 2024</p>
+      <p>By RoseMakh, October 2024</p>
 
       <div id="containerContainer">
         <div id="divContainer" class="contentContainer"></div>
-        <div class="contentContainer">
+
+        <div id="contentContainer2" class="contentContainer">
           <p>Mouse over the squares to change their colors.</p>
-          <p>Current Square: hsl( <span id="hslValue"></span> )</p>
+          <p>Current Square: hsl(<span id="hslValue"></span>)</p>
           <div id="mobileMenuDiv">
             <p id="mobileMenuP" class="hiddenByDisplay">
               Options (style this later)
@@ -96,9 +97,17 @@
             <button id="resetBtn">Reset the colors</button>
             <div id="smallBtnContainer">
               <button id="innerBtn" class="inlineBtn">Inner</button>
-              <button id="selectBtn" class="inlineBtn">Select</button>
+              <button id="listBtn" class="inlineBtn">List</button>
               <button id="printBtn" class="inlineBtn">Print</button>
             </div>
+          </div>
+        </div>
+
+        <div id="hiddenPrintables">
+          <p id="dateP" class="hiddenByDisplay"></p>
+          <div id="listModeContent" class="hiddenByDisplay">
+            <p id="listModeHeading">HSL Values</p>
+            <ul id="listModeSelections"></ul>
           </div>
         </div>
       </div>
