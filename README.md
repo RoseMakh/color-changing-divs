@@ -1,1 +1,1 @@
-Just a little web app. Mouse over the divs (squares) to make them change HSL parameters according to your selection. Change the div sizes too. Many other features. This app can be used to create pixel art or for creating a set of colors.
+Just a little web app. Mouse over the divs (squares) to make them change HSL parameters according to your selection. Change the div sizes too, plus some other features. This app can be used to create pixel art or for creating a set of colors for design projects.
