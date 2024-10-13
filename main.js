@@ -37,6 +37,8 @@ const getBtnSchemeDark = document.getElementById("btnSchemeDark");
 const getBtnSchemeLight = document.getElementById("btnSchemeLight");
 const getBtnScheme = document.getElementById("btnScheme");
 
+const getOSColorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
 //
 ////END OF CONSTANTS
 let divSize = "Large"; //div size
@@ -79,8 +81,18 @@ const divVarsDivStatsDefault = {
 };
 ////END OF VARIABLE DECLARATIONS SECTION
 
+//Change color scheme based on user's system preference and mark the correct scheme button
+if (getOSColorScheme.matches) {
+  document.documentElement.classList.add("darkMode");
+  getBtnSchemeDark.classList.add("btnSchemeActiveMarker");
+} else {
+  getBtnSchemeLight.classList.add("btnSchemeActiveMarker");
+}
+
+//show default value of the HSL value display
 getHslValue.textContent = hslValueDisplayDefault;
 
+//get today's date for printing
 getDateP.textContent = `Printed on ${new Date().toLocaleDateString("en-us", {
   weekday: "long",
   year: "numeric",
@@ -123,6 +135,8 @@ function animateSmallSchemeBtns() {
 getBtnFollow.addEventListener("click", animateSmallFollowBtns);
 getBtnScheme.addEventListener("click", animateSmallSchemeBtns);
 
+//toggle animation classes for the instructions body
+
 function animateInstructionsBody() {
   cc(this.id + " in animate instbody");
   toggleClass("hiddenByMoveHorizontal", getInstructionsBody);
@@ -130,7 +144,7 @@ function animateInstructionsBody() {
 }
 getInstructionsHeading.addEventListener("click", animateInstructionsBody);
 
-//close all open menus if anything other than the menu is clicked
+//for all menus, close all open menus if anything other than the currently open menu is clicked
 window.addEventListener("click", function (e) {
   if (
     !getBtnFollow.contains(e.target) &&
@@ -163,10 +177,6 @@ window.addEventListener("click", function (e) {
   }
 });
 
-//set the size of the color divs
-getDivContainer.style.height = divContainerSize + "px";
-getDivContainer.style.width = divContainerSize + "px";
-
 //toggle 1 class of 1 or more elements. when invoking, pass in as many elements as desired after the class name
 
 function toggleClass(className, ...elements) {
@@ -174,6 +184,37 @@ function toggleClass(className, ...elements) {
     elements[i].classList.toggle(className);
   }
 }
+
+//Change color scheme
+getBtnSchemeDark.addEventListener("click", () => {
+  if (!document.documentElement.classList.contains("darkMode")) {
+    document.documentElement.classList.add("darkMode");
+    getBtnSchemeLight.classList.remove("btnSchemeActiveMarker");
+    getBtnSchemeSystem.classList.remove("btnSchemeActiveMarker");
+    getBtnSchemeDark.classList.add("btnSchemeActiveMarker");
+  }
+});
+
+getBtnSchemeLight.addEventListener("click", () => {
+  if (document.documentElement.classList.contains("darkMode")) {
+    document.documentElement.classList.remove("darkMode");
+    getBtnSchemeLight.classList.add("btnSchemeActiveMarker");
+    getBtnSchemeSystem.classList.remove("btnSchemeActiveMarker");
+    getBtnSchemeDark.classList.remove("btnSchemeActiveMarker");
+  }
+});
+
+getBtnSchemeSystem.addEventListener("click", () => {
+  if (getOSColorScheme.matches) {
+    document.documentElement.classList.add("darkMode");
+  } else {
+    document.documentElement.classList.remove("darkMode");
+  }
+
+  getBtnSchemeLight.classList.remove("btnSchemeActiveMarker");
+  getBtnSchemeSystem.classList.add("btnSchemeActiveMarker");
+  getBtnSchemeDark.classList.remove("btnSchemeActiveMarker");
+});
 
 //change the layout if viewport orientation is vertical/portrait
 if (window.visualViewport.width < window.visualViewport.height) {
@@ -215,7 +256,6 @@ if (window.visualViewport.width < window.visualViewport.height) {
   }
 
   getMain.style.height = window.visualViewport.height + "px";
-  // getMain.style.overflow = "hidden"; //prevent scrolling
 
   getMobileMenuBtn.addEventListener("click", () => {
     mobileMenuHideShow();
@@ -228,6 +268,11 @@ if (window.visualViewport.width < window.visualViewport.height) {
   toggleClass("hiddenByDisplay", getMobileMenuP);
 }
 
+//set the size of the color divs
+getDivContainer.style.height = divContainerSize + "px";
+getDivContainer.style.width = divContainerSize + "px";
+
+//change the size all divs that are currently inside the div container
 function changeDivsSize() {
   for (const child of getDivContainer.children) {
     document.getElementById(child.id).style.width = sizeValue;
@@ -263,6 +308,7 @@ function determineNums() {
   }
 
   //This if statement doesn't run on load
+  //runs the add divs or remove divs function to add or remove divs from div container based on previous and current size mode (small/medium/large)
   if (prevDivsNum !== 0) {
     //larger divs = fewer divs, so remove some before changing their sizes
     if (prevDivsNum > divsNum) {
@@ -375,6 +421,7 @@ function divInnerMode() {
   }
 }
 
+//runs when you enter List mode
 function divListModeEnter() {
   if (mouseoverMode !== "list") {
     return;
@@ -384,9 +431,8 @@ function divListModeEnter() {
 
   getDivContainer.classList.add("noMouseoverModeMarker-gray");
 
-  // if (window.visualViewport.width < window.visualViewport.height) {
-  //   getMain.style.overflow = "auto";
-  // }
+  getDivContainer.style.cursor = "not-allowed";
+
   function pushColor() {
     for (const e in divVars) {
       cc("in pushcolor " + e);
@@ -462,10 +508,13 @@ function divListModeEnter() {
   }
 }
 
+//runs when you exit List mode
 function divListModeExit() {
   toggleClass("deactivatedBtn", getResetBtn);
 
   getDivContainer.classList.remove("noMouseoverModeMarker-gray");
+
+  getDivContainer.style.cursor = "cell";
 
   //hide the hsl values list
   toggleClass("hiddenByDisplay", getListModeContent);
@@ -556,17 +605,3 @@ function resetGrid() {
   }
   getHslValue.textContent = hslValueDisplayDefault;
 }
-
-////BEFORE AND AFTER PRINT FUNCTIONS
-
-function beforePrint() {
-  // toggleClass("hiddenByDisplay", getDateP);
-}
-
-function afterPrint() {
-  // toggleClass("hiddenByDisplay", getDateP);
-}
-
-window.addEventListener("beforeprint", beforePrint);
-
-window.addEventListener("afterprint", afterPrint);
